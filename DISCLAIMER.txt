@@ -1,0 +1,21 @@
+DISCLAIMER for pm2regen-ed
+
+Copyright (c) 2026 Lee Geon-goo
+
+1. NO ORIGINAL ASSETS & RESOURCES
+THIS SOFTWARE DOES NOT INCLUDE, DISTRIBUTE, OR MODIFY ANY ORIGINAL GAME ASSETS, INCLUDING BUT NOT LIMITED TO 
+EXECUTABLE FILES (.EXE, .DLL), IMAGES, OR AUDIO.
+
+2. DATA ACCESS INTENT
+This Software provides only the minimum necessary functions for modifying save data. 
+This Software does NOT include any features for dynamically or intelligently 
+analyzing/probing file structures. This Software can only read and modify data at fixed offsets 
+according to pre-defined specifications. This Software EXCLUSIVELY modifies data files associated 
+with the user that contain in-game progress data, specifically matching the pattern 'userData.bin' 
+or 'userData[number].bin' (e.g., 'userData2.bin', 'userData10.bin'). This Software does NOT access
+any copyrightable game assets, including but not limited to executable files and resource container files.
+
+3. NO COPYRIGHT INFRINGEMENT INTENT
+THE ENCRYPTION / DECRYPTION LOGIC IS INTENDED SOLELY FOR ALLOWING USERS TO ACCESS THEIR OWN PROGRESS DATA, 
+SPECIFICALLY 'userData.bin' AND ANY NUMBERED VARIATIONS THEREOF, AS DEFINED IN THE 'DATA ACCESS INTENT' 
+SECTION OF THE DISCLAIMER. IT IS NOT DESIGNED TO, NOR DOES IT FACILITATE, COPYRIGHT INFRINGEMENT OR SOFTWARE PIRACY.

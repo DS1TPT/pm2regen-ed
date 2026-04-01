@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Launch pm2regen-ed
+Comment=
+Exec=./pm2regen-ed
+Icon=
+Path=
+Terminal=true
+StartupNotify=false
