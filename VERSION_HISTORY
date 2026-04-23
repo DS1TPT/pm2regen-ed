@@ -1,0 +1,10 @@
+v1.1
+-----
+- Fixed backspace not working properly when editing Renown
+- Removed auto-correction during editing when data exceeds limit, as it may introduce confusion while inputting value without using backspace. The editor will auto-correct Renown only
+- Added hint message when a value lesser than or greater than limit is input and minimum/maximum value has been saved instead
+- Save selector will display in-game date
+ 
+v1.0
+-----
+First Release

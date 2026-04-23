@@ -71,6 +71,8 @@ struct LangPack {
 	/* program messages */
 	const char *guideNav;
 	const char *guideEdit;
+	const char *hintMinVal;
+	const char *hintMaxVal;
 	const char *msgFileSelector;
 	const char *guideFileSelector;
 	const char *fileSelectorWarningFileInvalid;

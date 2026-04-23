@@ -59,17 +59,14 @@ typedef enum {
     EDITOR_MODE_EDIT = 1
 } ui_editorModeTypedef;
 
-struct ui_EditorInputU16fxp2dp {
-    BOOL flagWrite;
-    u16fxp2dp_t val;
-};
+typedef enum {
+    EDITOR_HINT_INT_MINVAL = 0,
+    EDITOR_HINT_INT_MAXVAL = 1,
+    EDITOR_HINT_FXP_MINVAL = 2,
+    EDITOR_HINT_FXP_MAXVAL = 3
+} ui_editorHintTypedef;
 
-struct ui_EditorInputU16 {
-    BOOL flagWrite;
-    uint16_t val;
-};
-
-struct ui_EditorInputI32 {
+struct ui_EditorInput {
     BOOL flagWrite;
     int32_t val;
 };
@@ -80,10 +77,9 @@ struct ui_EditorInputI32 {
 int ui_popup(popupTypedef type, unsigned sizeX, unsigned sizeY, const char *msg, BOOL isDefaultYes);
 void ui_editorDrawBorder(); /* Draw editor border. this function implies clearScreen */
 void ui_editorPrintGuide(ui_editorModeTypedef mode);
+void ui_editorPrintHint(ui_editorHintTypedef hintType, int value);
 ui_editorCmdTypedef ui_editorSel(struct save_SavDat *psSave, int *pSelCoord);
-struct ui_EditorInputU16 ui_editorGetInputU16(struct save_SavDat *psSave, int *pSelCoord);
-struct ui_EditorInputI32 ui_editorGetInputI32(struct save_SavDat *psSave, int *pSelCoord);
-struct ui_EditorInputU16fxp2dp ui_editorGetInputU16fxp2dp(struct save_SavDat *psSave, int *pSelCoord);
+struct ui_EditorInput ui_editorGetInput(struct save_SavDat *psSave, int *pSelCoord);
 int ui_selectorSelFile(struct file_FileList *psList); /* Returns selected file number or -1 on quit command. Implies clearScreen */
 void ui_selectorDrawBorder(); /* Draw file selector border. This function implies clearScreen */
 

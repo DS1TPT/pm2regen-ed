@@ -65,6 +65,8 @@ const struct LangPack Langs[3] = {
 		
 		.guideNav = "ARROW: Select, Enter/Space: Edit, S: \033[1;4mS\033[0mave & Quit, Q: Discard & \033[1;4mQ\033[0muit",
 		.guideEdit = "C: \033[1;4mC\033[0mancel, Enter/Space: Done. Numeric input only                       ",
+		.hintMinVal = "Hint: Minimum value for the selected statistic is ",
+		.hintMaxVal = "Hint: Maximum value for the selected statistic is ",
 		.msgFileSelector = "Please select save file number",
 		.guideFileSelector = "ARROW: Select, Enter/Space: OK, Q: \033[1;4mQ\033[0muit",
 		.fileSelectorWarningFileInvalid = "WARNING: Corrupt or Invalid file",
@@ -137,6 +139,8 @@ const struct LangPack Langs[3] = {
 		
 		.guideNav = "방향키: 선택, Enter/Space: 수정, S: 저장 및 종료, Q: 저장하지 않고 종료",
 		.guideEdit = "C: 수정 취소, Enter/Space: 수정 완료, 숫자만 입력 가능                ",
+		.hintMinVal = "힌트: 선택된 스탯의 최소값: ",
+		.hintMaxVal = "힌트: 선택된 스탯의 최대값: ",
 		.msgFileSelector = "세이브 파일 번호를 선택하십시오",
 		.guideFileSelector = "방향키: 선택, Enter/Space: 확인, Q: 종료",
 		.fileSelectorWarningFileInvalid = "\b\b경고: 손상되었거나 유효하지 않은 파일",
@@ -209,6 +213,8 @@ const struct LangPack Langs[3] = {
 		
 		.guideNav = "矢印キー：選択、Enter/Space：修正、S：保存して終了、Q：保存せずに終了",
 		.guideEdit = "C：キャンセル、Enter/Space：修正完了、数字のみ入力可能               ",
+		.hintMinVal = "ヒント：選択されたステータスの最小値： ",
+		.hintMaxVal = "ヒント：選択されたステータスの最大値： ",
 		.msgFileSelector = "セーブ番号を選択してください",
 		.guideFileSelector = "\b\b矢印キー：選択、Enter/Space: 確認, Q: 終了",
 		.fileSelectorWarningFileInvalid = "警告: 破損しているか無効なファイル",

@@ -42,7 +42,7 @@
 #define TRUE 1
 #endif
 
-#define PM2REGEN_ED_VERSION "v1.0"
+#define PM2REGEN_ED_VERSION "v1.1"
 
 #define SAVE_NUM_NOT_SET -1
 #define SAVE_NUM_MAX 30

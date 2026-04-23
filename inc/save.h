@@ -46,6 +46,8 @@ typedef uint16_t u16fxp2dp_t; /* 16 bit fixed point (2 decimal places)
 #define BWH_MAX 13000
 #define WEIGHT_MIN 2500 /* In-game Limit */
 #define WEIGHT_MAX 8000 /* In-game Limit */
+#define RELATIONSHIP_MAX 100 /* In-game Limit */
+#define MATERNAL_INSTINCT_MAX 100
 
 
 struct save_SavDat { /* Data to be edited */
@@ -95,16 +97,21 @@ struct save_SavDat { /* Data to be edited */
     uint16_t relationshipButler;
     uint16_t maternalInstinct;
     uint16_t monstersKilled;
+
+    uint16_t year;
+    uint16_t month;
+    uint16_t day;
 };
 
 void save_printStat(struct save_SavDat *psSave);
 void save_highlightStat(struct save_SavDat *psSave, int coord, BOOL isOn); /* coord format: 0x<X><Y>(equivalent to selectorCoord) */
 int save_getStatByCoord(struct save_SavDat *psSave, selectorCoord coord);
-void save_writeToStructByCoord(struct save_SavDat *psSave, selectorCoord coord, int data);
+void save_writeToStructByCoord(struct save_SavDat *psSave, selectorCoord coord, int *pData);
 resRetTypedef save_structToBuf(struct file_Buffer *psBuf, struct save_SavDat *Src);
 resRetTypedef save_bufToStruct(struct file_Buffer *psBuf, struct save_SavDat *Dest);
 void save_printLastName(struct file_Buffer *psBuf);
 void save_printFirstName(struct file_Buffer *psBuf);
+void save_printDate(struct file_Buffer *psBuf);
 resRetTypedef save_checkVaildity(struct file_Buffer *psBuf);
 
 #endif /* SAVE_H */

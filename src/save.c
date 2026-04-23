@@ -496,8 +496,51 @@ int save_getStatByCoord(struct save_SavDat *psSave, selectorCoord coord)
     return 0; /* this line is written just to avoid compiler warning and will not be executed */
 }
 
-void save_writeToStructByCoord(struct save_SavDat *psSave, selectorCoord coord, int data)
+void save_writeToStructByCoord(struct save_SavDat *psSave, selectorCoord coord, int *pData)
 {
+    int data = *pData;
+
+    if (COORD_RELATIONSHIP_PRINCE <= coord && coord <= COORD_RELATIONSHIP_BUTLER) {
+        if (data > RELATIONSHIP_MAX) {
+            data = RELATIONSHIP_MAX;
+            ui_editorPrintHint(EDITOR_HINT_INT_MAXVAL, RELATIONSHIP_MAX);
+        }
+    } else if (coord == COORD_MATERNAL_INSTINCT) {
+        if (data > MATERNAL_INSTINCT_MAX) {
+            data = MATERNAL_INSTINCT_MAX;
+            ui_editorPrintHint(EDITOR_HINT_INT_MAXVAL, MATERNAL_INSTINCT_MAX);
+        }
+    } else if (coord == COORD_RENOWN) {
+        if (data > 1000) {
+            data = 1000;
+            ui_editorPrintHint(EDITOR_HINT_INT_MAXVAL, 1000);
+        }
+    } else if (coord == COORD_HEIGHT) {
+        if (data < HEIGHT_MIN) {
+            data = HEIGHT_MIN;
+            ui_editorPrintHint(EDITOR_HINT_FXP_MINVAL, HEIGHT_MIN);
+        } else if (data > HEIGHT_MAX) {
+            data = HEIGHT_MAX;
+            ui_editorPrintHint(EDITOR_HINT_FXP_MAXVAL, HEIGHT_MAX);
+        }
+    } else if (coord == COORD_WEIGHT) {
+        if (data < WEIGHT_MIN) {
+            data = WEIGHT_MIN;
+            ui_editorPrintHint(EDITOR_HINT_FXP_MINVAL, WEIGHT_MIN);
+        } else if (data > WEIGHT_MAX) {
+            data = WEIGHT_MAX;
+            ui_editorPrintHint(EDITOR_HINT_FXP_MAXVAL, WEIGHT_MAX);
+        }
+    } else if (COORD_BUST <= coord && coord <= COORD_HIPS) {
+        if (data < BWH_MIN) {
+            data = BWH_MIN;
+            ui_editorPrintHint(EDITOR_HINT_FXP_MINVAL, BWH_MIN);
+        } else if (data > BWH_MAX) {
+            data = BWH_MAX;
+            ui_editorPrintHint(EDITOR_HINT_FXP_MAXVAL, BWH_MAX);
+        }
+    }
+
     switch (coord) {
     case COORD_STAMINA:
         psSave->stamina = data;
@@ -607,49 +650,19 @@ void save_writeToStructByCoord(struct save_SavDat *psSave, selectorCoord coord, 
         break;
 
     case COORD_HEIGHT:
-        if (data < HEIGHT_MIN) {
-            psSave->height = HEIGHT_MIN;
-        } else if (data > HEIGHT_MAX) {
-            psSave->height = HEIGHT_MAX;
-        } else {
-            psSave->height = data;
-        }
+        psSave->height = data;
         break;
     case COORD_WEIGHT:
-        if (data < WEIGHT_MIN) {
-            psSave->weight = WEIGHT_MIN;
-        } else if (data > WEIGHT_MAX) {
-            psSave->weight = WEIGHT_MAX;
-        } else {
-            psSave->weight = data;
-        }
+        psSave->weight = data;
         break;
     case COORD_BUST:
-        if (data < BWH_MIN) {
-            psSave->bust = BWH_MIN;
-        } else if (data > BWH_MAX) {
-            psSave->bust = BWH_MAX;
-        } else {
-            psSave->bust = data;
-        }
+        psSave->bust = data;
         break;
     case COORD_WAIST:
-        if (data < BWH_MIN) {
-            psSave->waist = BWH_MIN;
-        } else if (data > BWH_MAX) {
-            psSave->waist = BWH_MAX;
-        } else {
-            psSave->waist = data;
-        }
+        psSave->waist = data;
         break;
     case COORD_HIPS:
-        if (data < BWH_MIN) {
-            psSave->hips = BWH_MIN;
-        } else if (data > BWH_MAX) {
-            psSave->hips = BWH_MAX;
-        } else {
-            psSave->hips = data;
-        }
+        psSave->hips = data;
         break;
     }
 }
@@ -819,6 +832,12 @@ void save_printFirstName(struct file_Buffer *psBuf)
         printf("%c", *p++);
     }
 }
+
+void save_printDate(struct file_Buffer *psBuf)
+{
+    printf("%04u/%02u/%02u     ", *(uint16_t*)(psBuf->data + OFFSET_YEAR), *(uint16_t*)(psBuf->data + OFFSET_MONTH), *(uint16_t*)(psBuf->data + OFFSET_DAY)); 
+}
+
 
 resRetTypedef save_checkVaildity(struct file_Buffer *psBuf)
 {

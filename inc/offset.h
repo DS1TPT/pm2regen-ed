@@ -98,4 +98,9 @@
 #define OFFSET_PATTERN_MATERNAL_INSTINCT 0x06 /* maternal instinct */
 #define OFFSET_PATTERN_MONSTERS_KILLED   0x08 /* number of defeated monsters */
 
+/* Misc. */
+#define OFFSET_YEAR                0x04
+#define OFFSET_MONTH               0x06
+#define OFFSET_DAY                 0x0A
+
 #endif /* OFFSET_H */

@@ -120,9 +120,7 @@ resRetTypedef editor(FILE *fSav)
     struct save_SavDat Save;
     int selCoord = 0x00;
     ui_editorCmdTypedef cmd;
-    struct ui_EditorInputI32 InputI32;
-    struct ui_EditorInputU16 InputU16;
-    struct ui_EditorInputU16fxp2dp InputU16fxp2dp;
+    struct ui_EditorInput Input;
     BOOL flagDiscardChanges = FALSE;
 
     ret = readData(fSav, &Buf, &Save);
@@ -138,24 +136,11 @@ resRetTypedef editor(FILE *fSav)
         cmd = ui_editorSel(&Save, &selCoord);
         if (cmd == EDITOR_CMD_EDIT) {
             ui_editorPrintGuide(EDITOR_MODE_EDIT);
-            if (selCoord == COORD_MONEY) {
-                InputI32 = ui_editorGetInputI32(&Save, &selCoord);
-                if (InputI32.flagWrite) {
-                    InputI32.flagWrite = FALSE;
-                    save_writeToStructByCoord(&Save, selCoord, InputI32.val);
-                }
-            } else if (COORD_HEIGHT <= selCoord && selCoord <= COORD_HIPS) {
-                InputU16fxp2dp = ui_editorGetInputU16fxp2dp(&Save, &selCoord);
-                if (InputU16fxp2dp.flagWrite) {
-                    InputU16fxp2dp.flagWrite = FALSE;
-                    save_writeToStructByCoord(&Save, selCoord, InputU16fxp2dp.val);
-                }
-            } else { 
-                InputU16 = ui_editorGetInputU16(&Save, &selCoord);
-                if (InputU16.flagWrite) {
-                    InputU16.flagWrite = FALSE;
-                    save_writeToStructByCoord(&Save, selCoord, InputU16.val);
-                }
+            vt_clearLine(BORDER_HEIGHT + 1);
+            Input = ui_editorGetInput(&Save,&selCoord);
+            if (Input.flagWrite) {
+                Input.flagWrite = FALSE;
+                save_writeToStructByCoord(&Save, selCoord, &Input.val);
             }
             save_printStat(&Save);
             save_highlightStat(&Save, selCoord, TRUE);

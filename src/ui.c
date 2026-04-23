@@ -181,6 +181,28 @@ void ui_editorPrintGuide(ui_editorModeTypedef mode)
     }
 }
 
+void ui_editorPrintHint(ui_editorHintTypedef hintType, int value)
+{
+    vt_cursor(1, BORDER_HEIGHT + 1);
+    vt_clearLine(BORDER_HEIGHT + 1);
+    if (hintType == EDITOR_HINT_INT_MINVAL) {
+        printf("\a%s%d", Langs[g_lang].hintMinVal, value);
+    } else if (hintType == EDITOR_HINT_INT_MAXVAL) {
+        printf("\a%s%d", Langs[g_lang].hintMaxVal, value);
+    } else if (hintType == EDITOR_HINT_FXP_MINVAL || hintType == EDITOR_HINT_FXP_MAXVAL) {
+        int buf[5] = { value % 10,
+                       (value % 100) / 10,
+                       (value % 1000) / 100,
+                       (value % 10000) / 1000,
+                       (value % 100000) / 10000 };
+        if (hintType == EDITOR_HINT_FXP_MINVAL) {
+            printf("\a%s%d%d%d.%d%d", Langs[g_lang].hintMinVal, buf[4], buf[3], buf[2], buf[1], buf[0]);
+        } else {
+            printf("\a%s%d%d%d.%d%d", Langs[g_lang].hintMaxVal, buf[4], buf[3], buf[2], buf[1], buf[0]);
+        }
+    }
+}
+
 ui_editorCmdTypedef ui_editorSel(struct save_SavDat *psSave, int *pSelCoord)
 {
     while (1) {
@@ -294,38 +316,53 @@ static void editorEdSetCursor(int *pSelCoord)
     }
 }
 
-struct ui_EditorInputU16 ui_editorGetInputU16(struct save_SavDat *psSave, int *pSelCoord)
+struct ui_EditorInput ui_editorGetInput(struct save_SavDat *psSave, int *pSelCoord) 
 {
     editorEdSetCursor(pSelCoord);
-
-    int ibuf[4] = { 0, };
+    
+    int ibuf[6] = { 0, };
     int ch;
     int origData = save_getStatByCoord(psSave, *pSelCoord);
-    struct ui_EditorInputU16 Input = { FALSE, 0 };
-    BOOL flagLimitTo100 = FALSE;
+    struct ui_EditorInput Input = { FALSE, 0 };
     BOOL flagExpandTo1000 = FALSE;
+    BOOL flagInt32 = FALSE;
+    BOOL flagU16fxp2dp = FALSE;
 
-    if (*pSelCoord == COORD_MATERNAL_INSTINCT || (COORD_RELATIONSHIP_PRINCE <= *pSelCoord && *pSelCoord <= COORD_RELATIONSHIP_BUTLER)) {
-        flagLimitTo100 = TRUE;
-    } else if (*pSelCoord == COORD_RENOWN) {
-        flagExpandTo1000 = TRUE;
-    }
-
-    if (flagExpandTo1000) {
-        ibuf[3] = origData / 1000;
-        ibuf[2] = (origData % 1000) / 100; 
-    } else {
-        ibuf[2] = origData / 100;
-    }
+    ibuf[4] = (origData % 100000) / 10000;
+    ibuf[3] = (origData % 10000) / 1000;
+    ibuf[2] = (origData % 1000) / 100;
     ibuf[1] = (origData % 100) / 10;
     ibuf[0] = origData % 10;
+    
+    if (*pSelCoord == COORD_RENOWN) {
+        flagExpandTo1000 = TRUE;
+    } else if (*pSelCoord == COORD_MONEY) {
+        flagInt32 = TRUE;
+        if (origData < 0) {
+            ibuf[5] = '-';
+            origData = -origData;
+        } else {
+            ibuf[5] = origData / 100000;
+        }
+    } else if (COORD_HEIGHT <= *pSelCoord && *pSelCoord <= COORD_HIPS) {
+        flagU16fxp2dp = TRUE;
+    }
 
     while (1) {
         if (flagExpandTo1000) {
             printf("\033[7m%d%d%d%d\033[0m\b\b\b\b", ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
+        } else if (flagInt32) {
+            if (ibuf[5] == '-') {
+                printf("\033[7m-%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
+            } else {
+                printf("\033[7m%d%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[5], ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
+            }
+        } else if (flagU16fxp2dp) {
+            printf("\033[7m%d%d%d.%d%d\033[0m\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
         } else {
             printf("\033[7m%d%d%d\033[0m\b\b\b", ibuf[2], ibuf[1], ibuf[0]);
         }
+
         ch = vt_getKeypress();
         if ('0' <= ch && ch <= '9') {
             if (flagExpandTo1000 && ibuf[2] != 0) {
@@ -334,76 +371,31 @@ struct ui_EditorInputU16 ui_editorGetInputU16(struct save_SavDat *psSave, int *p
                 ibuf[2] = 0;
                 ibuf[1] = 0;
                 ibuf[0] = 0;
-            } else {
-                if (flagExpandTo1000) {
-                    ibuf[3] = 0;
-                }
+            } else if (flagExpandTo1000 && ibuf[2] == 0) {
+                ibuf[3] = 0;
                 ibuf[2] = ibuf[1];
                 ibuf[1] = ibuf[0];
                 ibuf[0] = ch - 0x30;
-                if (ibuf[2] != 0 && (ibuf[1] != 0 || ibuf[0] != 0) && flagLimitTo100) {
-                    printf("\a");
-                    ibuf[2] = 1;
-                    ibuf[1] = 0;
-                    ibuf[0] = 0;
+            } else if (flagInt32) {
+                for (int i = 5; i > 0; i--) {
+                    if (i == 5 && ibuf[5] == '-') {
+                        continue;
+                    } else { 
+                        ibuf[i] = ibuf[i - 1];
+                    }
                 }
-            }
-        } else if (ch == KEY_CR || ch == KEY_LF || ch == ' ') {
-            Input.val = ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0];
-            if (flagExpandTo1000) {
-                Input.val += ibuf[3] * 1000;
-            }
-            Input.flagWrite = TRUE;
-            break;
-        } else if (ch == KEY_BS || ch == KEY_DEL) {
-            ibuf[0] = ibuf[1];
-            ibuf[1] = ibuf[2];
-            ibuf[2] = 0;
-        } else if (ch == 'c' || ch == 'C') {
-            break;
-        }
-    }
-    return Input;
-}
-
-struct ui_EditorInputI32 ui_editorGetInputI32(struct save_SavDat *psSave, int *pSelCoord)
-{
-    editorEdSetCursor(pSelCoord);
-
-    int ibuf[6] = { 0, };
-    int ch;
-    int origData = save_getStatByCoord(psSave, *pSelCoord);
-    struct ui_EditorInputI32 Input = { FALSE, 0 };
-
-    if (origData < 0) {
-        ibuf[5] = '-';
-        origData = -origData;
-    } else {
-        ibuf[5] = origData / 100000;
-    }
-    ibuf[4] = (origData % 100000) / 10000;
-    ibuf[3] = (origData % 10000) / 1000;
-    ibuf[2] = (origData % 1000) / 100;
-    ibuf[1] = (origData % 100) / 10;
-    ibuf[0] = origData % 10;
-    if (ibuf[5] == '-') {
-        printf("\033[7m-%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
-    } else {
-        printf("\033[7m%d%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[5], ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
-    }
-
-    while (1) {
-        ch = vt_getKeypress();
-        if (('0' <= ch && ch <= '9')) {
-            for (int i = 5; i > 0; i--) {
-                if (i == 5 && ibuf[5] == '-') {
-                    continue;
-                } else { 
+                ibuf[0] = ch - 0x30;
+            } else if (flagU16fxp2dp) {
+                for (int i = 4; i > 0; i--) {
                     ibuf[i] = ibuf[i - 1];
                 }
+                ibuf[0] = ch - 0x30;
+            } else {
+                ibuf[2] = ibuf[1];
+                ibuf[1] = ibuf[0];
+                ibuf[0] = ch - 0x30;
             }
-            ibuf[0] = ch - 0x30;
-        } else if (ch == '-') {
+        } else if (ch == '-' && flagInt32) {
             if (ibuf[5] == '-') {
                 ibuf[5] = 0;
             } else {
@@ -415,97 +407,57 @@ struct ui_EditorInputI32 ui_editorGetInputI32(struct save_SavDat *psSave, int *p
                         ibuf[i] = ibuf[i + 1];
                     }
                     ibuf[5] = '-';
-                }
-                
+                }   
             }
-        } else if (ch == '+') {
+        } else if (ch == '+' && flagInt32) {
             if (ibuf[5] != '-') {
                 continue;
             } else {
                 ibuf[5] = 0;
             }
         } else if (ch == KEY_CR || ch == KEY_LF || ch == ' ') {
-            Input.val = ibuf[4] * 10000 + ibuf[3] * 1000 + ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0];
-            if (ibuf[5] == '-') {
-                Input.val *= -1;
+            if (flagInt32) {
+                Input.val = ibuf[4] * 10000 + ibuf[3] * 1000 + ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0];
+                if (ibuf[5] == '-') {
+                    Input.val *= -1;
+                } else {
+                    Input.val += ibuf[5] * 100000;
+                }
             } else {
-                Input.val += ibuf[5] * 100000;
+                Input.val = ibuf[4] * 10000 + ibuf[3] * 1000 + ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0];
             }
             Input.flagWrite = TRUE;
             break;
         } else if (ch == KEY_BS || ch == KEY_DEL) {
-            if (ibuf[5] == '-' && ibuf[0] == 0 && ibuf[1] == 0 && ibuf[2] == 0 && ibuf[3] == 0 && ibuf[4] == 0) {
-                ibuf[5] = 0;
-            } else {
+            if (flagInt32) {
+                if (ibuf[5] == '-' && ibuf[0] == 0 && ibuf[1] == 0 && ibuf[2] == 0 && ibuf[3] == 0 && ibuf[4] == 0) {
+                    ibuf[5] = 0;
+                } else {
+                    for (int i = 0; i < 4; i++) {
+                        ibuf[i] = ibuf[i + 1];
+                    }
+                    if (ibuf[5] != '-') {
+                        ibuf[4] = ibuf[5];
+                        ibuf[5] = 0;
+                    } else {
+                        ibuf[4] = 0;
+                    }
+                }
+            } else if (flagU16fxp2dp) {
                 for (int i = 0; i < 4; i++) {
                     ibuf[i] = ibuf[i + 1];
                 }
-                if (ibuf[5] != '-') {
-                    ibuf[4] = ibuf[5];
-                    ibuf[5] = 0;
+                ibuf[4] = 0;
+            } else {
+                ibuf[0] = ibuf[1];
+                ibuf[1] = ibuf[2];
+                if (flagExpandTo1000) {
+                    ibuf[2] = ibuf[3];
+                    ibuf[3] = 0;
                 } else {
-                    ibuf[4] = 0;
+                    ibuf[2] = 0;
                 }
             }
-        } else if (ch == 'c' || ch == 'C') {
-            break;
-        }
-        if (ibuf[5] == '-') {
-            printf("\033[7m-%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
-        } else {
-            printf("\033[7m%d%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[5], ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
-        }
-    }
-    return Input;
-}
-
-struct ui_EditorInputU16fxp2dp ui_editorGetInputU16fxp2dp(struct save_SavDat *psSave, int *pSelCoord)
-{
-    editorEdSetCursor(pSelCoord);
-
-    int ibuf[5] = { 0, };
-    int ch;
-    int origData = save_getStatByCoord(psSave, *pSelCoord);
-    struct ui_EditorInputU16fxp2dp Input = { FALSE, 0 };
-
-    ibuf[4] = (origData % 100000) / 10000;
-    ibuf[3] = (origData % 10000) / 1000;
-    ibuf[2] = (origData % 1000) / 100;
-    ibuf[1] = (origData % 100) / 10;
-    ibuf[0] = origData % 10;
-
-    while (1) {
-        printf("\033[7m%d%d%d.%d%d\033[0m\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
-        ch = vt_getKeypress();
-        if ('0' <= ch && ch <= '9') {
-            if (ibuf[4] * 10000 + ibuf[3] * 1000 + ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0] == U16FXP2DP_T_LIMIT) {
-                printf("\a");
-                for (int i = 0; i < 5; i++) {
-                    ibuf[i] = 0;
-                }
-                continue;
-            } 
-            for (int i = 4; i > 0; i--) {
-                ibuf[i] = ibuf[i - 1];
-            }
-            ibuf[0] = ch - 0x30;
-            if ((ibuf[4] * 10000 + ibuf[3] * 1000 + ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0]) > U16FXP2DP_T_LIMIT) {
-                printf("\a");
-                ibuf[4] = (U16FXP2DP_T_LIMIT % 100000) / 10000;
-                ibuf[3] = (U16FXP2DP_T_LIMIT % 10000) / 1000;
-                ibuf[2] = (U16FXP2DP_T_LIMIT % 1000) / 100;
-                ibuf[1] = (U16FXP2DP_T_LIMIT % 100) / 10;
-                ibuf[0] = U16FXP2DP_T_LIMIT % 10;
-            }
-        } else if (ch == KEY_CR || ch == KEY_LF || ch == ' ') {
-            Input.val = ibuf[4] * 10000 + ibuf[3] * 1000 + ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0];
-            Input.flagWrite = TRUE;
-            break;
-        } else if (ch == KEY_BS || ch == KEY_DEL) {
-            for (int i = 0; i < 4; i++) {
-                ibuf[i] = ibuf[i + 1];
-            }
-            ibuf[4] = 0;
         } else if (ch == 'c' || ch == 'C') {
             break;
         }
@@ -513,7 +465,7 @@ struct ui_EditorInputU16fxp2dp ui_editorGetInputU16fxp2dp(struct save_SavDat *ps
     return Input;
 }
 
-static void selectorPrintName(int fileNum) /* helper function for ui_selectorSelFile */
+static void selectorPrintInfo(int fileNum) /* helper function for ui_selectorSelFile */
 {
     resRetTypedef result;
     char fname[PATH_MAX_LEN - 4] = { 0, }; /* buffer to save original file name */
@@ -521,7 +473,7 @@ static void selectorPrintName(int fileNum) /* helper function for ui_selectorSel
     struct file_Buffer Buf;
 
     if (fileNum == 1) {
-        fSav = fopen("userData.bin", "rb+"); /* first save does not have number in its name */
+        fSav = fopen("userData.bin", "rb+"); /* first save does not have number on its name */
     } else {
         snprintf(fname, sizeof(fname), "userData%d.bin", fileNum);
         fSav = fopen(fname, "rb+");
@@ -536,13 +488,19 @@ static void selectorPrintName(int fileNum) /* helper function for ui_selectorSel
     file_decrypt(&Buf);
     result = save_checkVaildity(&Buf);
 
+    vt_cursor(BORDER_WIDTH / 2 - 7, BORDER_HEIGHT / 2 + 3);
+
     if (result != SUCCESS) {
         printf("\b\b\b\b\b\b\b\b\b");
         printf(Langs[g_lang].fileSelectorWarningFileInvalid);
+        vt_cursor(BORDER_WIDTH / 2 - 5, BORDER_HEIGHT / 2 + 4);
+        printf("              ");
     } else {
         save_printFirstName(&Buf);
         printf(" ");
         save_printLastName(&Buf);
+        vt_cursor(BORDER_WIDTH / 2 - 4, BORDER_HEIGHT / 2 + 4);
+        save_printDate(&Buf);
     }
 
     free(Buf.data);
@@ -575,8 +533,7 @@ int ui_selectorSelFile(struct file_FileList *psList)
         for (int i = 0; i < BORDER_WIDTH /3 * 2 - 2; i++) {
             printf(" ");
         }
-        vt_cursor(BORDER_WIDTH / 2 - 7, BORDER_HEIGHT / 2 + 3);
-        selectorPrintName(psList->Files[index - 1].number);
+        selectorPrintInfo(psList->Files[index - 1].number);
         vt_cursor(BORDER_WIDTH / 2 + 2, BORDER_HEIGHT / 2);
 
         ch = vt_getKeypress();
