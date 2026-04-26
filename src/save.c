@@ -229,7 +229,7 @@ void save_printStat(struct save_SavDat *psSave)
     printU16fxp2dp(psSave->hips);
 }
 
-void save_highlightStat(struct save_SavDat *psSave, int coord, BOOL isOn) /* coord format: 0x<X><Y>(equivalent to selectorCoord) */
+void save_highlightStat(struct save_SavDat *psSave, int coord, BOOL isOn) /* coord format: 0x<X><Y> */
 {
     if (coord <= COORD_STRESS) {
         vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + coord);
@@ -835,7 +835,9 @@ void save_printFirstName(struct file_Buffer *psBuf)
 
 void save_printDate(struct file_Buffer *psBuf)
 {
-    printf("%04u/%02u/%02u     ", *(uint16_t*)(psBuf->data + OFFSET_YEAR), *(uint16_t*)(psBuf->data + OFFSET_MONTH), *(uint16_t*)(psBuf->data + OFFSET_DAY)); 
+    printf("%04u/%02u/%02u     ", *(uint16_t*)(psBuf->data + OFFSET_YEAR), 
+                                  *(uint16_t*)(psBuf->data + OFFSET_MONTH),
+                                  *(uint16_t*)(psBuf->data + OFFSET_DAY)); 
 }
 
 

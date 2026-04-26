@@ -97,10 +97,6 @@ struct save_SavDat { /* Data to be edited */
     uint16_t relationshipButler;
     uint16_t maternalInstinct;
     uint16_t monstersKilled;
-
-    uint16_t year;
-    uint16_t month;
-    uint16_t day;
 };
 
 void save_printStat(struct save_SavDat *psSave);
