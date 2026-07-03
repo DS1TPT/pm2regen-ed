@@ -242,15 +242,12 @@ const struct LangPack Langs[3] = {
 	}
 };
 
-const char license[] =    "LICENSE\nCopyright (c) 2026 Lee Geon-goo\n\n"
-						  "This program is free software: you can redistribute it and/or modify it under the terms of "
-						  "the GNU General Public License as published by the Free Software Foundation, either version 3 "
-						  "of the License, or (at you option) any later version.\n\n"
-						  "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; "
-						  "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. "
-						  "See the GNU General Public License for more details.\n\n"
-						  "You should have received a copy of the GNU General Public License along with this program. "
-						  "If not, see <https://www.gnu.org/licenses/>.\n";
+const char license[] =    "LICENSE\nCopyright (c) 2026 Lee Geon-goo <github.com/DS1TPT>\n\n"
+                          "This work is provided \"AS IS\", WITHOUT WARRANTY OF ANY KIND. You can redistribute"
+                          "it and/or modify it under the terms of the Do What The Fuck You Want To Greater"
+                          "Public License, as published by the Lee Geon-goo <github.com/DS1TPT/>. You should"
+                          "have received a copy of the Do What The Fuck You Want To Greater Public License."
+						  "If not, see <https://github.com/DS1TPT/wtfgpl> for more details.\n";
 
 const char disclaimer[] = "\nDISCLAIMER\n\n"
 					      "1. NO ORIGINAL ASSETS & RESOURCES INCLUDED\n"
