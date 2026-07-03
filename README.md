@@ -3,7 +3,6 @@ pm2regen-ed
 ※ 한국어 설명서 -> [바로가기](https://github.com/DS1TPT/pm2regen-ed/blob/main/README_KOREAN.md)   
 pm2regen-ed is a very tiny and simple cross-platform TUI(Text-based User Interface) save editor for Princess Maker 2 Regeneraion.   
    
-pm2regen-ed is a tool for enhancing gaming experience by enabling players to collect endings easier and faster instead of spending enormous amount of time, fixing broken statistics due to bug of the game, or play the game in unusual ways(for example, starting with massive amount of money from beginning instead of puny 500 golds).   
 pm2regen-ed can edit the following statistics:  
 1. 8 Basic statistics including Stamina, Strength, etc.
 2. Stress and Money
@@ -67,7 +66,7 @@ make
 ```
 You can also build pm2regen-ed without CMake. Move to the root directory pm2regen-ed and build using GCC with this one-liner:
 ```
-gcc -I./inc -I./lib ./src/*.c ./lib/tinyAES/aes.c -o pm2regen-ed
+gcc -I./inc -I./lib ./src/*.c ./lib/tinyAES/aes.c ./lib/vt100-c/vt100.c -o pm2regen-ed
 ```
 This software will be built for POSIX-compliant OS if _WIN32 is not defined.   
 To change this software's default language, edit line 27 of main.h.   
