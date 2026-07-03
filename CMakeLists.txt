@@ -11,7 +11,7 @@ add_executable(pm2regen-ed
     src/file.c
     src/save.c
     src/ui.c
-    src/vt.c
+    lib/vt100-c/vt100.c
     lib/tinyAES/aes.c
 )
 

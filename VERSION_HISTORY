@@ -1,10 +1,18 @@
 v1.1
 -----
+[Project]
+- Re-licensed the entire project from GNU GPLv3 to WTFGPL(github.com/DS1TPT/wtfgpl), which is way more permissive.
+[Program's functions]
 - Fixed backspace not working properly when editing Renown
 - Removed auto-correction during editing when data exceeds limit, as it may introduce confusion while inputting value without using backspace. The editor will auto-correct Renown only
 - Added hint message when a value lesser than or greater than limit is input and minimum/maximum value has been saved instead
 - Save selector will display in-game date
- 
+- ESC key will cancel editing
+
+[Code]
+- pm2regen-ed will use vt100-c(github.com/DS1TPT/vt100-c) instead of original one
+- Cleaned up some mess: usage of ANSI escape sequence outside of vt100 (and langPack) is now removed for better readability
+
 v1.0
 -----
 First Release

@@ -1,3 +1,6 @@
 [submodule "lib/tinyAES"]
 	path = lib/tinyAES
 	url = https://github.com/kokke/tiny-AES-c.git
+[submodule "lib/vt100-c"]
+	path = lib/vt100-c
+	url = https://github.com/DS1TPT/vt100-c.git

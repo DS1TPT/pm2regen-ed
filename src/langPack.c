@@ -3,21 +3,15 @@
  * Description: language pack that contains various messages
  * Notice: This file is a part of "pm2regen-ed".
  *         Please check main.c or README.md for more information.
- * 
- * Copyright (C) 2026 Lee Geon-goo
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (C) 2026 Lee Geon-goo <github.com/DS1TPT>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * This work is provided "AS IS", WITHOUT WARRANTY OF ANY KIND. You can 
+ * redistribute it and/or modify it under the terms of the Do What The Fuck
+ * You Want To Greater Public License, as published by Lee Geon-goo 
+ * <github.com/DS1TPT>. You should have received a copy of the Do What The
+ * Fuck You Want To Greater Public License. If not, see
+ * <https://github.com/DS1TPT/wtfgpl> for more details.
  */
 
 #include "langPack.h"
@@ -64,7 +58,7 @@ const struct LangPack Langs[3] = {
 		.monstersKilled = "Monsters Killed",
 		
 		.guideNav = "ARROW: Select, Enter/Space: Edit, S: \033[1;4mS\033[0mave & Quit, Q: Discard & \033[1;4mQ\033[0muit",
-		.guideEdit = "C: \033[1;4mC\033[0mancel, Enter/Space: Done. Numeric input only                       ",
+		.guideEdit = "ESC/C: \033[1;4mC\033[0mancel, Enter/Space: Done. Numeric input only                   ",
 		.hintMinVal = "Hint: Minimum value for the selected statistic is ",
 		.hintMaxVal = "Hint: Maximum value for the selected statistic is ",
 		.msgFileSelector = "Please select save file number",
@@ -138,7 +132,7 @@ const struct LangPack Langs[3] = {
 		.monstersKilled = "몬스터 살육 수",
 		
 		.guideNav = "방향키: 선택, Enter/Space: 수정, S: 저장 및 종료, Q: 저장하지 않고 종료",
-		.guideEdit = "C: 수정 취소, Enter/Space: 수정 완료, 숫자만 입력 가능                ",
+		.guideEdit = "ESC/C: 수정 취소, Enter/Space: 수정 완료, 숫자만 입력 가능               ",
 		.hintMinVal = "힌트: 선택된 스탯의 최소값: ",
 		.hintMaxVal = "힌트: 선택된 스탯의 최대값: ",
 		.msgFileSelector = "세이브 파일 번호를 선택하십시오",
@@ -212,7 +206,7 @@ const struct LangPack Langs[3] = {
 		.monstersKilled = "モンスター殺戮数",
 		
 		.guideNav = "矢印キー：選択、Enter/Space：修正、S：保存して終了、Q：保存せずに終了",
-		.guideEdit = "C：キャンセル、Enter/Space：修正完了、数字のみ入力可能               ",
+		.guideEdit = "ESC/C：キャンセル、Enter/Space：修正完了、数字のみ入力可能              ",
 		.hintMinVal = "ヒント：選択されたステータスの最小値： ",
 		.hintMaxVal = "ヒント：選択されたステータスの最大値： ",
 		.msgFileSelector = "セーブ番号を選択してください",

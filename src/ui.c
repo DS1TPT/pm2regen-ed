@@ -3,43 +3,37 @@
  * Description: tiny tui for pm2regen-ed
  * Notice: This file is a part of "pm2regen-ed".
  *         Please check main.c or README.md for more information.
- * 
- * Copyright (C) 2026 Lee Geon-goo
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (C) 2026 Lee Geon-goo <github.com/DS1TPT>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * This work is provided "AS IS", WITHOUT WARRANTY OF ANY KIND. You can 
+ * redistribute it and/or modify it under the terms of the Do What The Fuck
+ * You Want To Greater Public License, as published by Lee Geon-goo 
+ * <github.com/DS1TPT>. You should have received a copy of the Do What The
+ * Fuck You Want To Greater Public License. If not, see
+ * <https://github.com/DS1TPT/wtfgpl> for more details.
  */
 
 #include "ui.h"
-#include "vt.h"
+#include "vt100-c/vt100.h"
 
 static void popup_drawBorder(popupTypedef type, unsigned sizeX, unsigned sizeY) /* helper function for ui_popup */
 {
-    vt_cursor(BORDER_WIDTH / 2 - sizeX / 2, BORDER_HEIGHT / 2 - sizeY / 2);
+    vt_cursorPos(BORDER_WIDTH / 2 - sizeX / 2, BORDER_HEIGHT / 2 - sizeY / 2);
     printf("┏");
     for (int i = 0; i < sizeX - 2; i++) {
         printf("━");
     }
     printf("┓");
     for (int i = 0; i < sizeY - 1; i++) {
-        vt_cursor(BORDER_WIDTH / 2 - sizeX / 2, BORDER_HEIGHT / 2 - sizeY / 2 + 1 + i);
+        vt_cursorPos(BORDER_WIDTH / 2 - sizeX / 2, BORDER_HEIGHT / 2 - sizeY / 2 + 1 + i);
         printf("┃");
         for (int j = 0; j < sizeX - 2; j++) {
             printf(" ");
         }
         printf("┃");
     }
-    vt_cursor(BORDER_WIDTH / 2 - sizeX / 2, BORDER_HEIGHT / 2 + sizeY / 2);
+    vt_cursorPos(BORDER_WIDTH / 2 - sizeX / 2, BORDER_HEIGHT / 2 + sizeY / 2);
     printf("┗");
     for (int i = 0; i < sizeX - 2; i++) {
         printf("━");
@@ -48,17 +42,17 @@ static void popup_drawBorder(popupTypedef type, unsigned sizeX, unsigned sizeY) 
 
     switch (type) {
     case POPUP_OK:
-        vt_cursor(BORDER_WIDTH / 2 - 3, BORDER_HEIGHT / 2 + sizeY / 2 - 3);
+        vt_cursorPos(BORDER_WIDTH / 2 - 3, BORDER_HEIGHT / 2 + sizeY / 2 - 3);
         printf("┌────┐");
-        vt_cursor(BORDER_WIDTH / 2 - 3, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
+        vt_cursorPos(BORDER_WIDTH / 2 - 3, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
         printf(Langs[g_lang].popupOk);
-        vt_cursor(BORDER_WIDTH / 2 - 3, BORDER_HEIGHT / 2 + sizeY / 2 - 1);
+        vt_cursorPos(BORDER_WIDTH / 2 - 3, BORDER_HEIGHT / 2 + sizeY / 2 - 1);
         printf("└────┘");
         break;
     case POPUP_YN:
-        vt_cursor(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 3);
+        vt_cursorPos(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 3);
         printf("┌─────┐  ┌──────┐");
-        vt_cursor(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 1);
+        vt_cursorPos(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 1);
         printf("└─────┘  └──────┘");
         break;
     }
@@ -69,9 +63,9 @@ int ui_popup(popupTypedef type, unsigned sizeX, unsigned sizeY, const char *msg,
     popup_drawBorder(type, sizeX, sizeY);
 
     if (g_lang == LANG_EN) {
-        vt_cursor(BORDER_WIDTH / 2 - strlen(msg) / 2, BORDER_HEIGHT / 2 - 1);
+        vt_cursorPos(BORDER_WIDTH / 2 - strlen(msg) / 2, BORDER_HEIGHT / 2 - 1);
     } else {
-        vt_cursor(BORDER_WIDTH / 2 - strlen(msg) / 3, BORDER_HEIGHT / 2 - 1);
+        vt_cursorPos(BORDER_WIDTH / 2 - strlen(msg) / 3, BORDER_HEIGHT / 2 - 1);
     }
     printf("%s", msg);
 
@@ -79,7 +73,7 @@ int ui_popup(popupTypedef type, unsigned sizeX, unsigned sizeY, const char *msg,
     case POPUP_OK:
         while(1) {
             int ch = vt_getKeypress();
-            if (ch == KEY_CR || ch == KEY_LF || ch == ' ') {
+            if (ch == VT_KEY_CR || ch == VT_KEY_LF || ch == ' ') {
                 break;
             }
         }
@@ -87,7 +81,7 @@ int ui_popup(popupTypedef type, unsigned sizeX, unsigned sizeY, const char *msg,
         break;
     case POPUP_YN:
         BOOL isYes = isDefaultYes;
-        vt_cursor(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
+        vt_cursorPos(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
         if (isDefaultYes) {
             printf(Langs[g_lang].popupYN_Y);
         } else {
@@ -96,14 +90,14 @@ int ui_popup(popupTypedef type, unsigned sizeX, unsigned sizeY, const char *msg,
 
         while(1) {
             int ch = vt_getKeypress();
-            if (ch == KEY_CR || ch == KEY_LF || ch == ' ') {
+            if (ch == VT_KEY_CR || ch == VT_KEY_LF || ch == ' ') {
                 break;
-            } else if (isYes && ch == KEY_RIGHT) {
-                vt_cursor(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
+            } else if (isYes && ch == VT_KEY_RIGHT) {
+                vt_cursorPos(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
                 printf(Langs[g_lang].popupYN_N);
                 isYes = FALSE;
-            } else if (!isYes && ch == KEY_LEFT) {
-                vt_cursor(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
+            } else if (!isYes && ch == VT_KEY_LEFT) {
+                vt_cursorPos(BORDER_WIDTH / 2 - 9, BORDER_HEIGHT / 2 + sizeY / 2 - 2);
                 printf(Langs[g_lang].popupYN_Y);
                 isYes = TRUE;
             }
@@ -120,9 +114,9 @@ int ui_popup(popupTypedef type, unsigned sizeX, unsigned sizeY, const char *msg,
 void ui_editorDrawBorder()
 {
     vt_clearScreen();
-    vt_cursor(1,1);
+    vt_cursorPos(1,1);
     printf("┏");
-    vt_cursor(2,1);
+    vt_cursorPos(2,1);
     for (int i = 2; i < BORDER_WIDTH; i++) {
         if (i == BORDER_VERT_SECOND_X || i == BORDER_VERT_THIRD_X) {
             printf("┯");
@@ -130,11 +124,11 @@ void ui_editorDrawBorder()
             printf("━");
         }
     }
-    vt_cursor(BORDER_WIDTH, 1);
+    vt_cursorPos(BORDER_WIDTH, 1);
     printf("┓");
     for (int i = 2; i < BORDER_HEIGHT; i++) {
         if (i == BORDER_HOR_SECOND_Y || i == BORDER_HOR_THIRD_Y) {
-            vt_cursor(1, i);
+            vt_cursorPos(1, i);
             printf("┣");
             for (int j = 2; j < BORDER_WIDTH; j++) {
                 if (j == BORDER_VERT_SECOND_X || j == BORDER_VERT_THIRD_X) {
@@ -147,22 +141,22 @@ void ui_editorDrawBorder()
                     printf("─");
                 }
             }
-            vt_cursor(BORDER_WIDTH, i);
+            vt_cursorPos(BORDER_WIDTH, i);
             printf("┫");
         } else {
-            vt_cursor(1, i);
+            vt_cursorPos(1, i);
             printf("┃");
             if (i < BORDER_HOR_THIRD_Y) {
-                vt_cursor(BORDER_VERT_SECOND_X, i);
+                vt_cursorPos(BORDER_VERT_SECOND_X, i);
                 printf("│");
-                vt_cursor(BORDER_VERT_THIRD_X, i);
+                vt_cursorPos(BORDER_VERT_THIRD_X, i);
                 printf("│");
             }
-            vt_cursor(BORDER_WIDTH, i);
+            vt_cursorPos(BORDER_WIDTH, i);
             printf("┃");
         }
     }
-    vt_cursor(1, BORDER_HEIGHT);
+    vt_cursorPos(1, BORDER_HEIGHT);
     printf("┗");
     for (int i = 2; i < BORDER_WIDTH; i++) {
         printf("━");
@@ -173,18 +167,18 @@ void ui_editorDrawBorder()
 void ui_editorPrintGuide(ui_editorModeTypedef mode)
 {
     if (mode == EDITOR_MODE_SEL) {
-        vt_cursor(2, BORDER_HOR_THIRD_Y + 1);
+        vt_cursorPos(2, BORDER_HOR_THIRD_Y + 1);
         printf(Langs[g_lang].guideNav);
     } else if (mode == EDITOR_MODE_EDIT) {
-        vt_cursor(2, BORDER_HOR_THIRD_Y + 1);
+        vt_cursorPos(2, BORDER_HOR_THIRD_Y + 1);
         printf(Langs[g_lang].guideEdit);
     }
 }
 
 void ui_editorPrintHint(ui_editorHintTypedef hintType, int value)
 {
-    vt_cursor(1, BORDER_HEIGHT + 1);
-    vt_clearLine(BORDER_HEIGHT + 1);
+    vt_cursorPos(1, BORDER_HEIGHT + 1);
+    vt_clearLine();
     if (hintType == EDITOR_HINT_INT_MINVAL) {
         printf("\a%s%d", Langs[g_lang].hintMinVal, value);
     } else if (hintType == EDITOR_HINT_INT_MAXVAL) {
@@ -207,10 +201,10 @@ ui_editorCmdTypedef ui_editorSel(struct save_SavDat *psSave, int *pSelCoord)
 {
     while (1) {
         int key = vt_getKeypress();
-        if (key == KEY_UP && (*pSelCoord & 0x0f)) {
+        if (key == VT_KEY_UP && (*pSelCoord & 0x0f)) {
             save_highlightStat(psSave, *pSelCoord, FALSE);
             save_highlightStat(psSave, --*pSelCoord, TRUE);
-        } else if (key == KEY_DOWN) {
+        } else if (key == VT_KEY_DOWN) {
             if (0x20 <= *pSelCoord && *pSelCoord < COORD_HIPS) {
                 save_highlightStat(psSave, *pSelCoord, FALSE);
                 save_highlightStat(psSave, ++*pSelCoord, TRUE);
@@ -223,7 +217,7 @@ ui_editorCmdTypedef ui_editorSel(struct save_SavDat *psSave, int *pSelCoord)
             } else {
                 printf("\a");
             }
-        } else if (key == KEY_RIGHT && *pSelCoord < 0x20) {
+        } else if (key == VT_KEY_RIGHT && *pSelCoord < 0x20) {
             save_highlightStat(psSave, *pSelCoord, FALSE);
             if (*pSelCoord < 0x10) {
                 if (*pSelCoord < COORD_GLAMOUR) {
@@ -243,7 +237,7 @@ ui_editorCmdTypedef ui_editorSel(struct save_SavDat *psSave, int *pSelCoord)
                 *pSelCoord += 0x10;
             }
             save_highlightStat(psSave, *pSelCoord, TRUE);
-        } else if (key == KEY_LEFT && *pSelCoord >= 0x10) {
+        } else if (key == VT_KEY_LEFT && *pSelCoord >= 0x10) {
             save_highlightStat(psSave, *pSelCoord, FALSE);
             if (0x10 <= *pSelCoord && *pSelCoord < 0x20) {
                 if (*pSelCoord <= COORD_DEFENSE) {
@@ -281,7 +275,9 @@ ui_editorCmdTypedef ui_editorSel(struct save_SavDat *psSave, int *pSelCoord)
             } else {
                 return EDITOR_CMD_QUIT;
             }
-        } else if (key == KEY_CR || key == KEY_LF || key == ' ') {
+        } else if (key == VT_KEY_CR || key == VT_KEY_LF || key == ' ') {
+            vt_cursorPos(1, BORDER_HEIGHT + 1);
+            vt_clearLine();
             return EDITOR_CMD_EDIT;
         } else {
             printf("\a");
@@ -292,27 +288,27 @@ ui_editorCmdTypedef ui_editorSel(struct save_SavDat *psSave, int *pSelCoord)
 static void editorEdSetCursor(int *pSelCoord)
 {
     if (COORD_STAMINA <= *pSelCoord && *pSelCoord <= COORD_STRESS) {
-        vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + *pSelCoord);
+        vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + *pSelCoord);
     } else if (*pSelCoord == COORD_MONEY) {
-        vt_cursor(BORDER_VERT_SECOND_X - 7, CURSOR_OFFSET_LIST_2L + *pSelCoord);
+        vt_cursorPos(BORDER_VERT_SECOND_X - 7, CURSOR_OFFSET_LIST_2L + *pSelCoord);
     } else if (COORD_MATERNAL_INSTINCT <= *pSelCoord && *pSelCoord <= COORD_MONSTERS_KILLED) {
         if (*pSelCoord == COORD_RENOWN) {
-            vt_cursor(BORDER_VERT_SECOND_X - 5, CURSOR_OFFSET_LIST_2L + *pSelCoord);
+            vt_cursorPos(BORDER_VERT_SECOND_X - 5, CURSOR_OFFSET_LIST_2L + *pSelCoord);
         } else {
-            vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_2L + *pSelCoord);
+            vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_2L + *pSelCoord);
         }
     } else if (COORD_FIGHT_REPUTATION <= *pSelCoord && *pSelCoord <= COORD_DEFENSE) {
-        vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + *pSelCoord - 0x10);
+        vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + *pSelCoord - 0x10);
     } else if (COORD_MAGIC_REPUTATION <= *pSelCoord && *pSelCoord <= COORD_MAGIC_DEFENSE) {
-        vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + CURSOR_OFFSET_GAP_1_2M + *pSelCoord - 0x10);
+        vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + CURSOR_OFFSET_GAP_1_2M + *pSelCoord - 0x10);
     } else if (COORD_RELATIONSHIP_PRINCE <= *pSelCoord && *pSelCoord <= COORD_RELATIONSHIP_BUTLER) {
-        vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_3M + *pSelCoord - 0x10);
+        vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_3M + *pSelCoord - 0x10);
     } else if (COORD_SOCIAL_REPUTATION <= *pSelCoord && *pSelCoord <= COORD_ELOQUENCE) {
-        vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + *pSelCoord - 0x20);
+        vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + *pSelCoord - 0x20);
     } else if (COORD_HOUSEWORK_REPUTATION <= *pSelCoord && *pSelCoord <= COORD_TEMPER) {
-        vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + CURSOR_OFFSET_GAP_1_2R + *pSelCoord - 0x20);
+        vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + CURSOR_OFFSET_GAP_1_2R + *pSelCoord - 0x20);
     } else if (COORD_HEIGHT <= *pSelCoord && *pSelCoord <= COORD_HIPS) {
-        vt_cursor(BORDER_WIDTH - 7, CURSOR_OFFSET_LIST_3R + *pSelCoord - 0x20);
+        vt_cursorPos(BORDER_WIDTH - 7, CURSOR_OFFSET_LIST_3R + *pSelCoord - 0x20);
     }
 }
 
@@ -349,19 +345,21 @@ struct ui_EditorInput ui_editorGetInput(struct save_SavDat *psSave, int *pSelCoo
     }
 
     while (1) {
+        vt_format(VT_FORMAT_REVERSE_SET);
         if (flagExpandTo1000) {
-            printf("\033[7m%d%d%d%d\033[0m\b\b\b\b", ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
+            printf("%d%d%d%d\b\b\b\b", ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
         } else if (flagInt32) {
             if (ibuf[5] == '-') {
-                printf("\033[7m-%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
+                printf("-%d%d%d%d%d\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
             } else {
-                printf("\033[7m%d%d%d%d%d%d\033[0m\b\b\b\b\b\b", ibuf[5], ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
+                printf("%d%d%d%d%d%d\b\b\b\b\b\b", ibuf[5], ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
             }
         } else if (flagU16fxp2dp) {
-            printf("\033[7m%d%d%d.%d%d\033[0m\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
+            printf("%d%d%d.%d%d\b\b\b\b\b\b", ibuf[4], ibuf[3], ibuf[2], ibuf[1], ibuf[0]);
         } else {
-            printf("\033[7m%d%d%d\033[0m\b\b\b", ibuf[2], ibuf[1], ibuf[0]);
+            printf("%d%d%d\b\b\b", ibuf[2], ibuf[1], ibuf[0]);
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
 
         ch = vt_getKeypress();
         if ('0' <= ch && ch <= '9') {
@@ -415,7 +413,7 @@ struct ui_EditorInput ui_editorGetInput(struct save_SavDat *psSave, int *pSelCoo
             } else {
                 ibuf[5] = 0;
             }
-        } else if (ch == KEY_CR || ch == KEY_LF || ch == ' ') {
+        } else if (ch == VT_KEY_CR || ch == VT_KEY_LF || ch == ' ') {
             if (flagInt32) {
                 Input.val = ibuf[4] * 10000 + ibuf[3] * 1000 + ibuf[2] * 100 + ibuf[1] * 10 + ibuf[0];
                 if (ibuf[5] == '-') {
@@ -428,7 +426,7 @@ struct ui_EditorInput ui_editorGetInput(struct save_SavDat *psSave, int *pSelCoo
             }
             Input.flagWrite = TRUE;
             break;
-        } else if (ch == KEY_BS || ch == KEY_DEL) {
+        } else if (ch == VT_KEY_BS || ch == VT_KEY_DEL) {
             if (flagInt32) {
                 if (ibuf[5] == '-' && ibuf[0] == 0 && ibuf[1] == 0 && ibuf[2] == 0 && ibuf[3] == 0 && ibuf[4] == 0) {
                     ibuf[5] = 0;
@@ -458,7 +456,7 @@ struct ui_EditorInput ui_editorGetInput(struct save_SavDat *psSave, int *pSelCoo
                     ibuf[2] = 0;
                 }
             }
-        } else if (ch == 'c' || ch == 'C') {
+        } else if (ch == 'c' || ch == 'C' || ch == VT_KEY_ESC) {
             break;
         }
     }
@@ -488,18 +486,18 @@ static void selectorPrintInfo(int fileNum) /* helper function for ui_selectorSel
     file_decrypt(&Buf);
     result = save_checkVaildity(&Buf);
 
-    vt_cursor(BORDER_WIDTH / 2 - 7, BORDER_HEIGHT / 2 + 3);
+    vt_cursorPos(BORDER_WIDTH / 2 - 7, BORDER_HEIGHT / 2 + 3);
 
     if (result != SUCCESS) {
         printf("\b\b\b\b\b\b\b\b\b");
         printf(Langs[g_lang].fileSelectorWarningFileInvalid);
-        vt_cursor(BORDER_WIDTH / 2 - 5, BORDER_HEIGHT / 2 + 4);
+        vt_cursorPos(BORDER_WIDTH / 2 - 5, BORDER_HEIGHT / 2 + 4);
         printf("              ");
     } else {
         save_printFirstName(&Buf);
         printf(" ");
         save_printLastName(&Buf);
-        vt_cursor(BORDER_WIDTH / 2 - 4, BORDER_HEIGHT / 2 + 4);
+        vt_cursorPos(BORDER_WIDTH / 2 - 4, BORDER_HEIGHT / 2 + 4);
         save_printDate(&Buf);
     }
 
@@ -515,36 +513,38 @@ int ui_selectorSelFile(struct file_FileList *psList)
     int ch;
     
     while (1) {
-        vt_cursor(BORDER_WIDTH / 2, BORDER_HEIGHT / 2 - 1);
+        vt_cursorPos(BORDER_WIDTH / 2, BORDER_HEIGHT / 2 - 1);
         if (index != 1) {
             printf("▲");
         } else {
             printf(" ");
         }
-        vt_cursor(BORDER_WIDTH / 2 - 1, BORDER_HEIGHT / 2);
-        printf("\033[7m %02d \b\033[0m", selected);
-        vt_cursor(BORDER_WIDTH / 2, BORDER_HEIGHT / 2 + 1);
+        vt_cursorPos(BORDER_WIDTH / 2 - 1, BORDER_HEIGHT / 2);
+        vt_format(VT_FORMAT_REVERSE_SET);
+        printf(" %02d \b", selected);
+        vt_format(VT_FORMAT_REVERSE_RESET);
+        vt_cursorPos(BORDER_WIDTH / 2, BORDER_HEIGHT / 2 + 1);
         if (index < psList->count) {
             printf("▼");
         } else {
             printf(" ");
         }
-        vt_cursor(BORDER_WIDTH / 2 - BORDER_WIDTH / 3 + 1, BORDER_HEIGHT / 2 + 3);
+        vt_cursorPos(BORDER_WIDTH / 2 - BORDER_WIDTH / 3 + 1, BORDER_HEIGHT / 2 + 3);
         for (int i = 0; i < BORDER_WIDTH /3 * 2 - 2; i++) {
             printf(" ");
         }
         selectorPrintInfo(psList->Files[index - 1].number);
-        vt_cursor(BORDER_WIDTH / 2 + 2, BORDER_HEIGHT / 2);
+        vt_cursorPos(BORDER_WIDTH / 2 + 2, BORDER_HEIGHT / 2);
 
         ch = vt_getKeypress();
-        if (ch == KEY_CR || ch == KEY_LF) {
+        if (ch == VT_KEY_CR || ch == VT_KEY_LF) {
             break;
-        } else if (ch == KEY_UP && index > 1) {
+        } else if (ch == VT_KEY_UP && index > 1) {
             selected = psList->Files[--index - 1].number;
-        } else if (ch == KEY_DOWN && index < psList->count) {
+        } else if (ch == VT_KEY_DOWN && index < psList->count) {
             selected = psList->Files[++index - 1].number;
         } else if (ch == 'q' || ch == 'Q') {
-            vt_cursor(2, BORDER_HEIGHT / 2 + BORDER_HEIGHT / 3 + 1);
+            vt_cursorPos(2, BORDER_HEIGHT / 2 + BORDER_HEIGHT / 3 + 1);
             return SAVE_NUM_NOT_SET;
         }
     }
@@ -554,31 +554,31 @@ int ui_selectorSelFile(struct file_FileList *psList)
 void ui_selectorDrawBorder()
 {
     vt_clearScreen();
-    vt_cursor(1,1);
+    vt_cursorPos(1,1);
     printf("Version %s\n", PM2REGEN_ED_VERSION);
-    vt_cursor(BORDER_WIDTH / 2 - BORDER_WIDTH / 3, BORDER_HEIGHT / 2 - BORDER_HEIGHT / 4);
+    vt_cursorPos(BORDER_WIDTH / 2 - BORDER_WIDTH / 3, BORDER_HEIGHT / 2 - BORDER_HEIGHT / 4);
     printf("┏");
     for (int i = 0; i < BORDER_WIDTH /3 * 2 - 2; i++) {
         printf("━");
     }
     printf("┓");
     for (int i = 0; i < BORDER_HEIGHT / 2 - 1; i++) {
-        vt_cursor(BORDER_WIDTH / 2 - BORDER_WIDTH / 3, BORDER_HEIGHT / 2 - BORDER_HEIGHT / 4 + 1 + i);
+        vt_cursorPos(BORDER_WIDTH / 2 - BORDER_WIDTH / 3, BORDER_HEIGHT / 2 - BORDER_HEIGHT / 4 + 1 + i);
         printf("┃");
         for (int j = 0; j < BORDER_WIDTH / 3 * 2 - 2; j++) {
             printf(" ");
         }
         printf("┃");
     }
-    vt_cursor(BORDER_WIDTH / 2 - BORDER_WIDTH / 3, BORDER_HEIGHT / 2 + BORDER_HEIGHT / 4);
+    vt_cursorPos(BORDER_WIDTH / 2 - BORDER_WIDTH / 3, BORDER_HEIGHT / 2 + BORDER_HEIGHT / 4);
     printf("┗");
     for (int i = 0; i < BORDER_WIDTH / 3 * 2 - 2; i++) {
         printf("━");
     }
     printf("┛");
     
-    vt_cursor(BORDER_WIDTH / 2 - BORDER_WIDTH / 3 + 10, BORDER_HEIGHT / 2 - BORDER_HEIGHT / 4 + 2);
+    vt_cursorPos(BORDER_WIDTH / 2 - BORDER_WIDTH / 3 + 10, BORDER_HEIGHT / 2 - BORDER_HEIGHT / 4 + 2);
     printf(Langs[g_lang].msgFileSelector);
-    vt_cursor(BORDER_WIDTH / 2 - BORDER_WIDTH / 3 + 5, BORDER_HEIGHT / 2 + BORDER_HEIGHT / 4 + 1);
+    vt_cursorPos(BORDER_WIDTH / 2 - BORDER_WIDTH / 3 + 5, BORDER_HEIGHT / 2 + BORDER_HEIGHT / 4 + 1);
     printf(Langs[g_lang].guideFileSelector);
 }

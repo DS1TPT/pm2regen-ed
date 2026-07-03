@@ -7,20 +7,14 @@
  *         2. This software contains tiny-AES-c by kokke @ Github. You can obtain
  *         source code and information from: https://github.com/kokke/tiny-AES-c/
  *
- * Copyright (C) 2026 Lee Geon-goo
+ * Copyright (C) 2026 Lee Geon-goo <github.com/DS1TPT>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * This work is provided "AS IS", WITHOUT WARRANTY OF ANY KIND. You can 
+ * redistribute it and/or modify it under the terms of the Do What The Fuck
+ * You Want To Greater Public License, as published by Lee Geon-goo 
+ * <github.com/DS1TPT>. You should have received a copy of the Do What The
+ * Fuck You Want To Greater Public License. If not, see
+ * <https://github.com/DS1TPT/wtfgpl> for more details.
  *
  * DISCLAIMER
  *  
@@ -47,7 +41,7 @@
 /* Includes */
 #include "main.h"
 #include "ui.h"
-#include "vt.h"
+#include "vt100-c/vt100.h"
 #include "file.h"
 #include "save.h"
 #include "offset.h"
@@ -136,7 +130,6 @@ resRetTypedef editor(FILE *fSav)
         cmd = ui_editorSel(&Save, &selCoord);
         if (cmd == EDITOR_CMD_EDIT) {
             ui_editorPrintGuide(EDITOR_MODE_EDIT);
-            vt_clearLine(BORDER_HEIGHT + 1);
             Input = ui_editorGetInput(&Save,&selCoord);
             if (Input.flagWrite) {
                 Input.flagWrite = FALSE;
@@ -172,7 +165,8 @@ unsigned fileSelector()
 {
     struct file_FileList List = file_getFileList();
     if (List.count <= 0) {
-        printf("\033[7;1;31m");
+        vt_formatMulti(VT_FORMAT_MASK_BOLD | VT_FORMAT_MASK_REVERSE);
+        vt_color(VT_FG_RED, VT_BG_SKIP);
         printf(Langs[g_lang].errNoFile);
         sleep_s(SLEEP_DURATION);
         return SAVE_NUM_NOT_SET; /* return immediately when no file is found */
@@ -197,6 +191,7 @@ int main(int argc, char **argv)
 
     vt_enableAnsi(TRUE);
     vt_setEchoCanonical(FALSE);
+    vt_format(VT_FORMAT_RESET_ALL); /* reset vt format first */
 
     switch (argc) {
     case 1: /* no argument -> set selector flag */
@@ -264,14 +259,16 @@ int main(int argc, char **argv)
             result = CANCELLED;
         }
     } else if (flagTooManyArg) {
-        printf("\033[7;1;31m");
+        vt_formatMulti(VT_FORMAT_MASK_BOLD | VT_FORMAT_MASK_REVERSE);
+        vt_color(VT_FG_RED, VT_BG_SKIP);
         printf(Langs[g_lang].errTooManyArg);
     } else if (flagInvalidArg) {
-        printf("\033[7;1;31m");
+        vt_formatMulti(VT_FORMAT_MASK_BOLD | VT_FORMAT_MASK_REVERSE);
+        vt_color(VT_FG_RED, VT_BG_SKIP);
         printf(Langs[g_lang].errArg);
     }
     if (flagHelp || flagInvalidArg || flagTooManyArg) {
-        printf("\033[0m");
+        vt_format(VT_FORMAT_RESET_ALL);
         printf("Version %s\n", PM2REGEN_ED_VERSION);
         printf(Langs[g_lang].help);
         result = CANCELLED; /* to avoid duplicate messages */
@@ -300,12 +297,16 @@ int main(int argc, char **argv)
                 fSav = NULL;
             } else {
                 result = editor(fSav);
-                vt_clearLine(BORDER_HEIGHT + 1);
-                vt_clearLine(BORDER_HEIGHT + 2);
-                vt_clearLine(BORDER_HEIGHT + 3);
-                vt_cursor(1, BORDER_HEIGHT + 1);
+                vt_cursorPos(1, BORDER_HEIGHT + 1);
+                vt_clearLine();
+                vt_cursorPos(1, BORDER_HEIGHT + 2);
+                vt_clearLine();
+                vt_cursorPos(1, BORDER_HEIGHT + 3);
+                vt_clearLine();
+                vt_cursorPos(1, BORDER_HEIGHT + 1);
                 if (result != SUCCESS && result != CANCELLED) {
-                    printf("\033[7;1;31m");
+                    vt_formatMulti(VT_FORMAT_MASK_BOLD | VT_FORMAT_MASK_REVERSE);
+                    vt_color(VT_FG_RED, VT_BG_SKIP);
                 }
             }
         }
@@ -350,7 +351,7 @@ int main(int argc, char **argv)
         fSav = NULL;
     }
 
-    printf("\033[0m");
+    vt_format(VT_FORMAT_RESET_ALL);
     vt_setEchoCanonical(TRUE);
     vt_enableAnsi(FALSE);
 

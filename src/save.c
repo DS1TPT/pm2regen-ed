@@ -4,26 +4,20 @@
  * Notice: This file is a part of "pm2regen-ed".
  *         Please check main.c or README.md for more information.
  * 
- * Copyright (C) 2026 Lee Geon-goo
+ * Copyright (C) 2026 Lee Geon-goo <github.com/DS1TPT>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * This work is provided "AS IS", WITHOUT WARRANTY OF ANY KIND. You can 
+ * redistribute it and/or modify it under the terms of the Do What The Fuck
+ * You Want To Greater Public License, as published by Lee Geon-goo 
+ * <github.com/DS1TPT>. You should have received a copy of the Do What The
+ * Fuck You Want To Greater Public License. If not, see
+ * <https://github.com/DS1TPT/wtfgpl> for more details.
  */
 
 #include "main.h"
 #include "offset.h"
 #include "save.h"
-#include "vt.h"
+#include "vt100-c/vt100.h"
 #include "ui.h"
 
 const char refBytesHiddenStats1[] = { 0x1B, 0xE3, 0x81, 0xA8, 0xE3, 0x81, 0xAB, 0xE3, 0x81, 0x8B, 
@@ -60,329 +54,336 @@ static void printU16fxp2dp(u16fxp2dp_t fxp)
 
 void save_printStat(struct save_SavDat *psSave)
 {
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L);
     printf(Langs[g_lang].stamina);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 1);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 1);
     printf(Langs[g_lang].strength);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 2);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 2);
     printf(Langs[g_lang].intelligence);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 3);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 3);
     printf(Langs[g_lang].refinement);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 4);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 4);
     printf(Langs[g_lang].glamour);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 5);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 5);
     printf(Langs[g_lang].morality);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 6);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 6);
     printf(Langs[g_lang].faith);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 7);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 7);
     printf(Langs[g_lang].sin);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 8);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 8);
     printf(Langs[g_lang].sensitivity);
-    vt_cursor(2, CURSOR_OFFSET_LIST_1L + 9);
+    vt_cursorPos(2, CURSOR_OFFSET_LIST_1L + 9);
     printf(Langs[g_lang].stress);
     
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L);
     printf("%03u", psSave->stamina);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 1);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 1);
     printf("%03u", psSave->strength);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 2);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 2);
     printf("%03u", psSave->intelligence);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 3);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 3);
     printf("%03u", psSave->refinement);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 4);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 4);
     printf("%03u", psSave->glamour);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 5);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 5);
     printf("%03u", psSave->morality);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 6);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 6);
     printf("%03u", psSave->faith);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 7);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 7);
     printf("%03u", psSave->sin);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 8);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 8);
     printf("%03u", psSave->sensitivity);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 9);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + 9);
     printf("%03u", psSave->stress);
 
-    vt_cursor(2, BORDER_HOR_SECOND_Y + 1);
+    vt_cursorPos(2, BORDER_HOR_SECOND_Y + 1);
     printf(Langs[g_lang].money);
-    vt_cursor(2, BORDER_HOR_SECOND_Y + 2);
+    vt_cursorPos(2, BORDER_HOR_SECOND_Y + 2);
     printf(Langs[g_lang].maternalInstinct);
-    vt_cursor(2, BORDER_HOR_SECOND_Y + 3);
+    vt_cursorPos(2, BORDER_HOR_SECOND_Y + 3);
     printf(Langs[g_lang].renown);
-    vt_cursor(2, BORDER_HOR_SECOND_Y + 4);
+    vt_cursorPos(2, BORDER_HOR_SECOND_Y + 4);
     printf(Langs[g_lang].monstersKilled);
 
-    vt_cursor(BORDER_VERT_SECOND_X - 7, BORDER_HOR_SECOND_Y + 1);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 7, BORDER_HOR_SECOND_Y + 1);
     printf("%06d", psSave->money);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, BORDER_HOR_SECOND_Y + 2);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, BORDER_HOR_SECOND_Y + 2);
     printf("%03u", psSave->maternalInstinct);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, BORDER_HOR_SECOND_Y + 3);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, BORDER_HOR_SECOND_Y + 3);
     printf("\b%04u", psSave->renown);
-    vt_cursor(BORDER_VERT_SECOND_X - 4, BORDER_HOR_SECOND_Y + 4);
+    vt_cursorPos(BORDER_VERT_SECOND_X - 4, BORDER_HOR_SECOND_Y + 4);
     printf("%03u", psSave->monstersKilled);
     
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M);
     printf(Langs[g_lang].fightReputation);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M + 1);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M + 1);
     printf(Langs[g_lang].combatSkill);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M + 2);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M + 2);
     printf(Langs[g_lang].attack);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M + 3);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_1M + 3);
     printf(Langs[g_lang].defense);
     
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M);
     printf(Langs[g_lang].magicReputation);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M + 1);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M + 1);
     printf(Langs[g_lang].magicSkill);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M + 2);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M + 2);
     printf(Langs[g_lang].magicAttack);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M + 3);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, CURSOR_OFFSET_LIST_2M + 3);
     printf(Langs[g_lang].magicDefense);
     
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M);
     printf("%03u", psSave->fightReputation);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + 1);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + 1);
     printf("%03u", psSave->combatSkill);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + 2);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + 2);
     printf("%03u", psSave->attack);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + 3);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + 3);
     printf("%03u", psSave->defense);
     
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M);
     printf("%03u", psSave->magicReputation);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M + 1);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M + 1);
     printf("%03u", psSave->magicSkill);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M + 2);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M + 2);
     printf("%03u", psSave->magicAttack);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M + 3);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_2M + 3);
     printf("%03u", psSave->magicDefense);
 
-    vt_cursor(BORDER_VERT_SECOND_X + 1, BORDER_HOR_SECOND_Y + 1);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, BORDER_HOR_SECOND_Y + 1);
     printf(Langs[g_lang].relationshipPrince);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, BORDER_HOR_SECOND_Y + 2);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, BORDER_HOR_SECOND_Y + 2);
     printf(Langs[g_lang].relationshipFather);
-    vt_cursor(BORDER_VERT_SECOND_X + 1, BORDER_HOR_SECOND_Y + 3);
+    vt_cursorPos(BORDER_VERT_SECOND_X + 1, BORDER_HOR_SECOND_Y + 3);
     printf(Langs[g_lang].relationshipButler);
 
-    vt_cursor(BORDER_VERT_THIRD_X - 4, BORDER_HOR_SECOND_Y + 1);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, BORDER_HOR_SECOND_Y + 1);
     printf("%03u", psSave->relationshipPrince);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, BORDER_HOR_SECOND_Y + 2);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, BORDER_HOR_SECOND_Y + 2);
     printf("%03u", psSave->relationshipFather);
-    vt_cursor(BORDER_VERT_THIRD_X - 4, BORDER_HOR_SECOND_Y + 3);
+    vt_cursorPos(BORDER_VERT_THIRD_X - 4, BORDER_HOR_SECOND_Y + 3);
     printf("%03u", psSave->relationshipButler);
     
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R);
     printf(Langs[g_lang].socialReputation);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R + 1);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R + 1);
     printf(Langs[g_lang].decorum);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R + 2);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R + 2);
     printf(Langs[g_lang].artistry);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R + 3);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_1R + 3);
     printf(Langs[g_lang].eloquence);
     
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R);
     printf("%03u", psSave->socialReputation);
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + 1);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + 1);
     printf("%03u", psSave->decorum);
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + 2);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + 2);
     printf("%03u", psSave->artistry);
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + 3);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + 3);
     printf("%03u", psSave->eloquence);
     
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R);
     printf(Langs[g_lang].houseReputation);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R + 1);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R + 1);
     printf(Langs[g_lang].cooking);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R + 2);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R + 2);
     printf(Langs[g_lang].cleaning);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R + 3);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, CURSOR_OFFSET_LIST_2R + 3);
     printf(Langs[g_lang].temper);
     
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R);
     printf("%03u", psSave->houseReputation);
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R + 1);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R + 1);
     printf("%03u", psSave->cooking);
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R + 2);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R + 2);
     printf("%03u", psSave->cleaning);
-    vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R + 3);
+    vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_2R + 3);
     printf("%03u", psSave->temper);
 
-    vt_cursor(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 1);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 1);
     printf(Langs[g_lang].height);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 2);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 2);
     printf(Langs[g_lang].weight);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 3);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 3);
     printf(Langs[g_lang].bust);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 4);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 4);
     printf(Langs[g_lang].waist);
-    vt_cursor(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 5);
+    vt_cursorPos(BORDER_VERT_THIRD_X + 1, BORDER_HOR_SECOND_Y + 5);
     printf(Langs[g_lang].hips);
 
-    vt_cursor(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 1);
+    vt_cursorPos(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 1);
     printU16fxp2dp(psSave->height);
-    vt_cursor(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 2);
+    vt_cursorPos(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 2);
     printU16fxp2dp(psSave->weight);
-    vt_cursor(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 3);
+    vt_cursorPos(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 3);
     printU16fxp2dp(psSave->bust);
-    vt_cursor(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 4);
+    vt_cursorPos(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 4);
     printU16fxp2dp(psSave->waist);
-    vt_cursor(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 5);
+    vt_cursorPos(BORDER_WIDTH - 7, BORDER_HOR_SECOND_Y + 5);
     printU16fxp2dp(psSave->hips);
 }
 
 void save_highlightStat(struct save_SavDat *psSave, int coord, BOOL isOn) /* coord format: 0x<X><Y> */
 {
     if (coord <= COORD_STRESS) {
-        vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + coord);
+        vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_1L + coord);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_STAMINA:
-            printf("%03u\033[0m", psSave->stamina);
+            printf("%03u", psSave->stamina);
             break;
         case COORD_STRENGTH:
-            printf("%03u\033[0m", psSave->strength);
+            printf("%03u", psSave->strength);
             break;
         case COORD_INTELLIGENCE:
-            printf("%03u\033[0m", psSave->intelligence);
+            printf("%03u", psSave->intelligence);
             break;
         case COORD_REFINEMENT:
-            printf("%03u\033[0m", psSave->refinement);
+            printf("%03u", psSave->refinement);
             break;
         case COORD_GLAMOUR:
-            printf("%03u\033[0m", psSave->glamour);
+            printf("%03u", psSave->glamour);
             break;
         case COORD_MORALITY:
-            printf("%03u\033[0m", psSave->morality);
+            printf("%03u", psSave->morality);
             break;
         case COORD_FAITH:
-            printf("%03u\033[0m", psSave->faith);
+            printf("%03u", psSave->faith);
             break;
         case COORD_SIN:
-            printf("%03u\033[0m", psSave->sin);
+            printf("%03u", psSave->sin);
             break;
         case COORD_SENSITIVITY:
-            printf("%03u\033[0m", psSave->sensitivity);
+            printf("%03u", psSave->sensitivity);
             break;
         case COORD_STRESS:
-            printf("%03u\033[0m", psSave->stress);
+            printf("%03u", psSave->stress);
             break;
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
     } else if (COORD_MONEY <= coord && coord <= COORD_MONSTERS_KILLED) {
-        vt_cursor(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_2L + coord);
+        vt_cursorPos(BORDER_VERT_SECOND_X - 4, CURSOR_OFFSET_LIST_2L + coord);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_MONEY:
-            printf("\b\b\b%06d\033[0m", psSave->money);
+            printf("\b\b\b%06d", psSave->money);
             break;
         case COORD_MATERNAL_INSTINCT:
-            printf("%03u\033[0m", psSave->maternalInstinct);
+            printf("%03u", psSave->maternalInstinct);
             break;
         case COORD_RENOWN:
-            printf("\b%04u\033[0m", psSave->renown);
+            printf("\b%04u", psSave->renown);
             break;
         case COORD_MONSTERS_KILLED:
-            printf("%03u\033[0m", psSave->monstersKilled);
+            printf("%03u", psSave->monstersKilled);
             break;
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
     } else if (COORD_FIGHT_REPUTATION <= coord && coord <= COORD_DEFENSE) {
-        vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + coord - 0x10);
+        vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + coord - 0x10);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_FIGHT_REPUTATION:
-            printf("%03u\033[0m", psSave->fightReputation);
+            printf("%03u", psSave->fightReputation);
             break;
         case COORD_COMBAT_SKILL:
-            printf("%03u\033[0m", psSave->combatSkill);
+            printf("%03u", psSave->combatSkill);
             break;
         case COORD_ATTACK:
-            printf("%03u\033[0m", psSave->attack);
+            printf("%03u", psSave->attack);
             break;
         case COORD_DEFENSE:
-            printf("%03u\033[0m", psSave->defense);
+            printf("%03u", psSave->defense);
             break;
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
     } else if (COORD_MAGIC_REPUTATION <= coord && coord <= COORD_MAGIC_DEFENSE) {
-        vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + CURSOR_OFFSET_GAP_1_2M + coord - 0x10);
+        vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_1M + CURSOR_OFFSET_GAP_1_2M + coord - 0x10);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_MAGIC_REPUTATION:
-            printf("%03u\033[0m", psSave->magicReputation);
+            printf("%03u", psSave->magicReputation);
             break;
         case COORD_MAGIC_SKILL:
-            printf("%03u\033[0m", psSave->magicSkill);
+            printf("%03u", psSave->magicSkill);
             break;
         case COORD_MAGIC_ATTACK:
-            printf("%03u\033[0m", psSave->magicAttack);
+            printf("%03u", psSave->magicAttack);
             break;
         case COORD_MAGIC_DEFENSE:
-            printf("%03u\033[0m", psSave->magicDefense);
+            printf("%03u", psSave->magicDefense);
             break;
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
     } else if (COORD_RELATIONSHIP_PRINCE <= coord && coord <= COORD_RELATIONSHIP_BUTLER) {
-        vt_cursor(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_3M + coord - 0x10);
+        vt_cursorPos(BORDER_VERT_THIRD_X - 4, CURSOR_OFFSET_LIST_3M + coord - 0x10);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_RELATIONSHIP_PRINCE:
-            printf("%03u\033[0m", psSave->relationshipPrince);
+            printf("%03u", psSave->relationshipPrince);
             break;
         case COORD_RELATIONSHIP_FATHER:
-            printf("%03u\033[0m", psSave->relationshipFather);
+            printf("%03u", psSave->relationshipFather);
             break;
         case COORD_RELATIONSHIP_BUTLER:
-            printf("%03u\033[0m", psSave->relationshipButler);
+            printf("%03u", psSave->relationshipButler);
             break;
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
     } else if (COORD_SOCIAL_REPUTATION <= coord && coord <= COORD_ELOQUENCE) {
-        vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + coord - 0x20);
+        vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + coord - 0x20);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_SOCIAL_REPUTATION:
-            printf("%03u\033[0m", psSave->socialReputation);
+            printf("%03u", psSave->socialReputation);
             break;
         case COORD_DECORUM:
-            printf("%03u\033[0m", psSave->decorum);
+            printf("%03u", psSave->decorum);
             break;
         case COORD_ARTISTRY:
-            printf("%03u\033[0m", psSave->artistry);
+            printf("%03u", psSave->artistry);
             break;
         case COORD_ELOQUENCE:
-            printf("%03u\033[0m", psSave->eloquence);
+            printf("%03u", psSave->eloquence);
             break;
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
     } else if (COORD_HOUSEWORK_REPUTATION <= coord && coord <= COORD_TEMPER) {
-        vt_cursor(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + CURSOR_OFFSET_GAP_1_2R + coord - 0x20);
+        vt_cursorPos(BORDER_WIDTH - 4, CURSOR_OFFSET_LIST_1R + CURSOR_OFFSET_GAP_1_2R + coord - 0x20);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_HOUSEWORK_REPUTATION:
-            printf("%03u\033[0m", psSave->houseReputation);
+            printf("%03u", psSave->houseReputation);
             break;
         case COORD_COOKING:
-            printf("%03u\033[0m", psSave->cooking);
+            printf("%03u", psSave->cooking);
             break;
         case COORD_CLEANING:
-            printf("%03u\033[0m", psSave->cleaning);
+            printf("%03u", psSave->cleaning);
             break;
         case COORD_TEMPER:
-            printf("%03u\033[0m", psSave->temper);
+            printf("%03u", psSave->temper);
             break;
         }
+        vt_format(VT_FORMAT_REVERSE_RESET);
     } else if (COORD_HEIGHT <= coord && coord <= COORD_HIPS) {
-        vt_cursor(BORDER_WIDTH - 7, CURSOR_OFFSET_LIST_3R + coord - 0x20);
+        vt_cursorPos(BORDER_WIDTH - 7, CURSOR_OFFSET_LIST_3R + coord - 0x20);
         if (isOn) {
-            printf("\033[7m");
+            vt_format(VT_FORMAT_REVERSE_SET);
         }
         switch (coord) {
         case COORD_HEIGHT:
@@ -401,7 +402,7 @@ void save_highlightStat(struct save_SavDat *psSave, int coord, BOOL isOn) /* coo
             printU16fxp2dp(psSave->hips);
             break;
         }
-        printf("\033[0m");
+        vt_format(VT_FORMAT_REVERSE_RESET);
     }
 }
 
