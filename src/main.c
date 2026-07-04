@@ -320,7 +320,7 @@ int main(int argc, char **argv)
         printf(Langs[g_lang].errFileWrite);
         break;
     case FAIL_OPEN:
-        printf(Langs[g_lang].errFileOpen);
+	printf("%s%s\n", Langs[g_lang].errFileOpen, fnameSav);
         break;
     case FAIL_READ:
         printf(Langs[g_lang].errFileRead);
