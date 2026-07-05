@@ -64,7 +64,7 @@ After you've finished downloading, move to (root directory of pm2regen-ed)/build
 cmake ..
 make
 ```
-You can also build pm2regen-ed without CMake. Move to the root directory pm2regen-ed and build using GCC with this one-liner:
+You can also build pm2regen-ed without CMake. Move to the root directory of pm2regen-ed and build using GCC with this one-liner:
 ```
 gcc -I./inc -I./lib ./src/*.c ./lib/tinyAES/aes.c ./lib/vt100-c/vt100.c -o pm2regen-ed
 ```
