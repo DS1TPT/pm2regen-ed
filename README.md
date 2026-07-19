@@ -29,7 +29,7 @@ Requirements
 
 Usage
 ------
-1. Download Executable files are available from Releases page. Choose compressed file with your preferred default language setting. De-compress the file, place executable and launcher in save folder of PM2 Regeneration and run from it to edit your save(s).   
+1. Download Executable file from Releases page. Choose compressed file with your preferred default language setting. De-compress the file, place executable and launcher in save folder of PM2 Regeneration and run from it to edit your save(s).   
 2. Place executable and Launcher in save directory. Saves are typically located at the following directory:
 ```
 Windows: %localappdata%\BrisBrain\PM2\Saved\SaveGames\<Some numbers>
