@@ -12,7 +12,15 @@ pm2regen-ed는 다음 스탯들을 고칠 수 있습니다:
 7. 신체 치수(키, 몸무게, 쓰리 사이즈)
    
 이 소프트웨어는 Github의 kokke 님의 tiny-AES-c 를 사용합니다. 다음 주소에서 소스코드와 여러 정보를 보실 수 있습니다: https://github.com/kokke/tiny-AES-c/   
-   
+
+스크린샷
+--------
+![alt text](https://github.com/DS1TPT/pm2regen-ed/blob/main/screenshots/editor_kr.png)   
+(편집기 화면)  
+
+![alt text](https://github.com/DS1TPT/pm2regen-ed/blob/main/screenshots/selector_kr.png)   
+(세이브 파일 선택 화면)
+
 요구사항
 --------
 - POSIX 호환 운영체제(Linux, BSD, macOS ...) 또는 윈도우 10 버전 1511 이상
