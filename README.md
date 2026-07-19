@@ -26,11 +26,10 @@ Screenshots
 Requirements
 ------------
 - POSIX-compliant OS(Linux, BSD, macOS ...) or Windows 10 Version 1511 and later
-- Terminal emulator that supports ANSI VT standard(Modern Operating Systems already have them installed out of the box)
 
 Usage
 ------
-1. Pre-built binary is available in Releases page. Download compressed file with your preferred default language setting. De-compress the file, place executable and launcher in save folder of PM2 Regeneration and run from it to edit your save(s).   
+1. Download Executable files are available from Releases page. Choose compressed file with your preferred default language setting. De-compress the file, place executable and launcher in save folder of PM2 Regeneration and run from it to edit your save(s).   
 2. Place executable and Launcher in save directory. Saves are typically located at the following directory:
 ```
 Windows: %localappdata%\BrisBrain\PM2\Saved\SaveGames\<Some numbers>
