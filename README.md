@@ -13,6 +13,15 @@ pm2regen-ed can edit the following statistics:
 7. Measurements(Height, Weight, BWH)
    
 This software contains tiny-AES-c by kokke @ Github. You can obtain source code and information from: https://github.com/kokke/tiny-AES-c/   
+
+Screenshots
+------------
+![alt text](https://github.com/DS1TPT/pm2regen-ed/blob/main/screenshots/editor1.png)   
+(Editor screen)  
+
+![alt text](https://github.com/DS1TPT/pm2regen-ed/blob/main/screenshots/selector.png)   
+(Save selector screen)
+
    
 Requirements
 ------------
